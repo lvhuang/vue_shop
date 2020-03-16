@@ -7,7 +7,7 @@
       </div>
       <!-- 登录内容 -->
       <div>
-        <el-form :model="loginForm" :rules="loginFormRules" class="login_from">
+        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" class="login_from">
           <!-- 用户名 -->
           <el-form-item prop="username">
             <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
@@ -22,8 +22,8 @@
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item class="btns">
-            <el-button type="primary">登录</el-button>
-            <el-button type="info">重置</el-button>
+            <el-button type="primary" @click="login">登录</el-button>
+            <el-button type="info" @click="resetloginForm">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -54,6 +54,17 @@ export default {
         ]
       }
     };
+  },
+  methods:{
+    resetloginForm(){
+      // console.log(this)获取组件实例
+      this.$refs.loginFormRef.resetFields()
+    },
+    login(){
+      this.$refs.loginFormRef.validate((valid)=>{
+        console.log(valid)
+      })
+    }
   }
 };
 </script>
