@@ -7,14 +7,18 @@
       </div>
       <!-- 登录内容 -->
       <div>
-        <el-form label-width="0" class="login_from">
+        <el-form :model="loginForm" :rules="loginFormRules" class="login_from">
           <!-- 用户名 -->
-          <el-form-item>
-            <el-input></el-input>
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
           </el-form-item>
           <!-- 密码 -->
-          <el-form-item>
-            <el-input></el-input>
+          <el-form-item prop="password">
+            <el-input
+              v-model="loginForm.password"
+              prefix-icon="el-icon-s-cooperation"
+              type="password"
+            ></el-input>
           </el-form-item>
           <!-- 按钮 -->
           <el-form-item class="btns">
@@ -28,7 +32,30 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      // 这是登录表单的数据对象
+      loginForm: {
+        username: "",
+        password: ""
+      },
+      // 这是表单的验证规则对象
+      loginFormRules: {
+        // 验证用户名是否合法
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        // 验证密码是否合法
+        password: [
+          { required: true, message: "请输入密码", trigger: "change" },
+          { min: 6, max: 15, message: "长度在 6 到 15 个字符", trigger: "blur" }
+        ]
+      }
+    };
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -65,13 +92,13 @@ export default {};
     }
   }
 }
-.login_from{
+.login_from {
   position: absolute;
   bottom: 0;
   width: 100%;
   padding: 0 20px;
 }
-.btns{
+.btns {
   display: flex;
   justify-content: flex-end;
 }
