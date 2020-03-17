@@ -37,8 +37,8 @@ export default {
     return {
       // 这是登录表单的数据对象
       loginForm: {
-        username: "admin",
-        password: "123456"
+        username: "",
+        password: ""
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -66,9 +66,15 @@ export default {
         if (!valid) return; // 如果预验证是假的，直接结束函数
         // console.log(this.$http)
         const { data: res } = await this.$http.post("login", this.loginForm);// 解构赋值获取data
-        console.log(res.meta.status);
-        if(res.meta.status!==200) return console.log('登录失败')
-        console.log('登录成功')
+        console.log(res);
+        if(res.meta.status!==200) return this.$message.error('登录失败')
+        this.$message.success('登录成功')
+        // 1.将登录成功的token值保存在sessionstorage中
+            //  只有登录成功才能访问其他页面，所以token先当与于令牌
+            // token只有在页面打开时需要，所以应存储在sessionstorage中，当页面关闭时sessionstorage中的值随之消失
+        window.sessionStorage.setItem('token',res.data.token)
+        // 通过编程式导航实现路由跳转，跳转路径到/home
+        this.$router.push('/home')
       });
     }
   }
