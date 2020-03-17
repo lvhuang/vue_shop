@@ -16,11 +16,19 @@ axios.interceptors.request.use(config => {
   // 必须要return config
   return config
 })
+// 添加响应拦截器
+axios.interceptors.response.use((response) =>{
+  // 对响应数据做点什么
+  console.log(response);
+  return response;
+});
 Vue.prototype.$http = axios// 给Vue原型加上axios
 
 
 
 new Vue({
   router,
+  created:function(){window.$vue = this} ,
   render: h => h(App)
 }).$mount('#app')
+
