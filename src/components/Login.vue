@@ -37,8 +37,8 @@ export default {
     return {
       // 这是登录表单的数据对象
       loginForm: {
-        username: "",
-        password: ""
+        username: "admin",
+        password: "123456"
       },
       // 这是表单的验证规则对象
       loginFormRules: {
@@ -55,15 +55,21 @@ export default {
       }
     };
   },
-  methods:{
-    resetloginForm(){
+  methods: {
+    resetloginForm() {
       // console.log(this)获取组件实例
-      this.$refs.loginFormRef.resetFields()
+      this.$refs.loginFormRef.resetFields();
     },
-    login(){
-      this.$refs.loginFormRef.validate((valid)=>{
-        console.log(valid)
-      })
+    login() {
+      this.$refs.loginFormRef.validate(async valid => {
+        console.log(valid);
+        if (!valid) return; // 如果预验证是假的，直接结束函数
+        // console.log(this.$http)
+        const { data: res } = await this.$http.post("login", this.loginForm);// 解构赋值获取data
+        console.log(res.meta.status);
+        if(res.meta.status!==200) return console.log('登录失败')
+        console.log('登录成功')
+      });
     }
   }
 };
