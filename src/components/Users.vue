@@ -29,7 +29,7 @@
         <el-table-column label="状态">
           <!--作用域插槽的使用获取该列所有数据  -->
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state"></el-switch>
+            <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="250px">
@@ -79,7 +79,7 @@ export default {
     this.getUserList();
   },
   methods: {
-    // 获取列表数据
+    // 获取用户列表数据
     async getUserList() {
       var { data: res } = await this.$http.get("users", {
         params: this.queryInfo
@@ -95,10 +95,23 @@ export default {
       this.queryInfo.pagesize = newSize;
       this.getUserList();
     },
-     // 监听页数改变事件
-    handleCurrentChange(newPage){
+    // 监听页数改变事件
+    handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage;
       this.getUserList();
+    },
+    // 监听状态更改
+    async userStateChanged(userInfor) {
+      console.log(userInfor);
+      // put更新用户数据
+      const { data: res } = await this.$http.put(
+        `users/${userInfor.id}/state/${userInfor.mg_state}`
+      )
+      if (res.meta.status !== 200) {
+        userInfor.mg_state = !userInfor.mg_state;
+        return this.$message.error("更新用户状态失败");
+      }
+      this.$message.success('更新用户状态成功')
     }
   }
 };
