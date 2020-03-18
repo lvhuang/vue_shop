@@ -20,9 +20,10 @@
           :unique-opened="true"
           :collapse="isCollapse"
           :collapse-transition="false"
+          router
         >
           <!-- 一级菜单 -->
-          <el-submenu :index="item.id+''" v-for="item in menulist" :key="item.id">
+          <el-submenu :index="'/'+item.path+''" v-for="item in menulist" :key="item.id">
             <!-- 一级菜单模板区域 -->
             <template slot="title">
               <!-- 图标 -->
@@ -31,7 +32,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="subitem.id+''" v-for="subitem in item.children" :key="subitem.id">
+            <el-menu-item :index="'/'+subitem.path+''" v-for="subitem in item.children" :key="subitem.id">
               <i class="el-icon-menu"></i>
               <span slot="title">{{subitem.authName}}</span>
             </el-menu-item>
