@@ -56,9 +56,9 @@
       ></el-pagination>
     </el-card>
     <!-- 添加用户对话框模块组件 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%">
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClosed">
       <!-- 弹窗中添加表单 -->
-      <el-form :model="addForm" :rules="addFormRules" ref="addRuleFormRef" label-width="70px">
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
         </el-form-item>
@@ -75,7 +75,7 @@
       <!-- 弹框下面确认取消栏 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -85,6 +85,23 @@
 import LoginVue from "./Login.vue";
 export default {
   data() {
+    // 验证邮箱的规则
+    var checkEmail = (rule, value, cb) => {
+      const regEmail = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (regEmail.test(value)) {
+        return cb();
+      }
+      cb(new Error("请输入合法的邮箱"));
+    };
+    // 验证手机号的规则
+    var checkMobile = (rule, value, cb) => {
+      const regMobile = /^1(3[0-9]|5[189]|8[6789])[0-9]{8}$/;
+      if (regMobile.test(value)) {
+        return cb();
+      }
+      cb(new Error("请输入合法的手机号"));
+    };
+
     // 获取列表查询参数写到一个data里面，后面直接引用
     return {
       queryInfo: {
@@ -101,10 +118,10 @@ export default {
       addDialogVisible: false,
       // 添加用户的表单数据addForm
       addForm: {
-        username: '',
-        password: '',
-        email:'',
-        mobile:''
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
       },
       // 添加表单的用户规则内容
       addFormRules: {
@@ -118,11 +135,11 @@ export default {
         ],
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
-          { min: 3, max: 10, message: "长度在 6 到 15 个字符", trigger: "blur" }
+          { validator: checkEmail, trigger: "blur" }
         ],
-         mobile: [
+        mobile: [
           { required: true, message: "请输入电话号码", trigger: "blur" },
-          { min: 3, max: 10, message: "长度在 6 到 15 个字符", trigger: "blur" }
+          { validator: checkMobile, trigger: "blur" }
         ]
       }
     };
@@ -164,6 +181,24 @@ export default {
         return this.$message.error("更新用户状态失败");
       }
       this.$message.success("更新用户状态成功");
+    },
+    // 添加对话框关闭之后添加内容重定向
+    addDialogClosed() {
+      this.$refs.addFormRef.resetFields();
+    },
+    // 添加弹框确认提交之前对数据进行预验证
+    addUser() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return;
+        const { data: res } = await this.$http.post("users", this.addForm);
+        if ((res.meta.status = !200)) {
+          this.$message.error("添加用户失败");
+        }
+        this.$message.success("添加用户成功");
+        // 添加用户成功，关闭弹框addDialogVisible = false"
+        this.addDialogVisible = false;
+        this.getUserList()
+      });
     }
   }
 };

@@ -61,6 +61,7 @@ export default {
       this.$refs.loginFormRef.resetFields();
     },
     login() {
+      // 登录前对数据进行预验证，利用表单validate方法
       this.$refs.loginFormRef.validate(async valid => {
         console.log(valid);
         if (!valid) return; // 如果预验证是假的，直接结束函数
