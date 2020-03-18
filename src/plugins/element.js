@@ -5,7 +5,7 @@ import {
     Form, FormItem, Input, Message, Container, Header, Aside,
     Main, Menu, Submenu, MenuItemGroup, MenuItem,
     Breadcrumb, BreadcrumbItem, Card, Row, Col, Table,
-    TableColumn, Switch, Tooltip, Pagination
+    TableColumn, Switch, Tooltip, Pagination, Dialog
 } from 'element-ui'
 
 Vue.use(Button)
@@ -30,6 +30,7 @@ Vue.use(TableColumn)
 Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
+Vue.use(Dialog)
 
 Vue.prototype.$message = Message
 // 把弹框组件挂载到vue实例上，每一个组件可以通过this.$message来使用弹框组件提示

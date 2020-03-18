@@ -11,12 +11,13 @@
       <!-- 搜索与添加区域 -->
       <el-row :gutter="20">
         <el-col :span="7">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <!-- 通过在input组件双向绑定数据，把查询参数绑定，然后通过get获取数据 -->
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUserList()">
+            <el-button slot="append" icon="el-icon-search" @click="getUserList()"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
       <!-- 用户列表区 -->
@@ -54,6 +55,29 @@
         :total="total"
       ></el-pagination>
     </el-card>
+    <!-- 添加用户对话框模块组件 -->
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%">
+      <!-- 弹窗中添加表单 -->
+      <el-form :model="addForm" :rules="addFormRules" ref="addRuleFormRef" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 弹框下面确认取消栏 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -72,7 +96,35 @@ export default {
       },
       // 存储列表数据
       usersList: [],
-      total: 0
+      total: 0,
+      // 对话框显示与隐藏
+      addDialogVisible: false,
+      // 添加用户的表单数据addForm
+      addForm: {
+        username: '',
+        password: '',
+        email:'',
+        mobile:''
+      },
+      // 添加表单的用户规则内容
+      addFormRules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 15, message: "长度在 6 到 15 个字符", trigger: "blur" }
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 6 到 15 个字符", trigger: "blur" }
+        ],
+         mobile: [
+          { required: true, message: "请输入电话号码", trigger: "blur" },
+          { min: 3, max: 10, message: "长度在 6 到 15 个字符", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
@@ -106,12 +158,12 @@ export default {
       // put更新用户数据
       const { data: res } = await this.$http.put(
         `users/${userInfor.id}/state/${userInfor.mg_state}`
-      )
+      );
       if (res.meta.status !== 200) {
         userInfor.mg_state = !userInfor.mg_state;
         return this.$message.error("更新用户状态失败");
       }
-      this.$message.success('更新用户状态成功')
+      this.$message.success("更新用户状态成功");
     }
   }
 };
