@@ -42,7 +42,12 @@
               size="mini"
               @click="showEditDialog(scope.row.id)"
             ></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="removeUserById(scope.row.id)"
+            ></el-button>
             <el-tooltip effect="dark" content="角色分配" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
             </el-tooltip>
@@ -279,6 +284,33 @@ export default {
         this.getUserList();
         this.$message.success("更新用户数据成功");
       });
+    },
+    // 根据id删除对用的用户信息
+    async removeUserById(id) {
+      // 弹框询问是否删除用户信息
+      const res = await this.$confirm(
+        "此操作将永久删除该用户, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).catch(err => err);
+      console.log(res);
+
+      // 如果确定删除，返回confirm字符串
+      // 如果取消删除，返回cancel字符串
+      if (res !== "confirm") {
+        return this.$message.info("已取消删除");
+      }
+      // delete发起请求删除用户信息
+      const { data: result } = await this.$http.delete("users/" + id);
+      if (result.meta.status !== 200) {
+        return this.$message.error("删除用户失败");
+      }
+      this.$message.success("删除用户成功");
+      this.getUserList()
     }
   }
 };
