@@ -36,7 +36,12 @@
         <el-table-column label="操作" width="250px">
           <template slot-scope="scope">
             <!-- 修改，删除，角色分配按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="showEditDialog(scope.row.id)"
+            ></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <el-tooltip effect="dark" content="角色分配" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -78,6 +83,26 @@
         <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 修改用户对话框模块组件 -->
+    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="50%">
+      <!-- 修改弹框中的列表 -->
+      <el-form :model="editData" :rules="editDataRules" ref="editDataRef" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editData.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="emial">
+          <el-input v-model="editData.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="editData.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 弹框下面确认取消栏 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -114,7 +139,7 @@ export default {
       // 存储列表数据
       usersList: [],
       total: 0,
-      // 对话框显示与隐藏
+      // 控制添加对话框显示与隐藏
       addDialogVisible: false,
       // 添加用户的表单数据addForm
       addForm: {
@@ -133,6 +158,21 @@ export default {
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 15, message: "长度在 6 到 15 个字符", trigger: "blur" }
         ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { validator: checkEmail, trigger: "blur" }
+        ],
+        mobile: [
+          { required: true, message: "请输入电话号码", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ]
+      },
+      // 控制修改对话框显示与隐藏
+      editDialogVisible: false,
+      // 查询到的用户信息对象
+      editData: {},
+      // 修改表单验证规则对象
+      editDataRules: {
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
           { validator: checkEmail, trigger: "blur" }
@@ -186,7 +226,7 @@ export default {
     addDialogClosed() {
       this.$refs.addFormRef.resetFields();
     },
-    // 添加弹框确认提交之前对数据进行预验证
+    // 添加弹框确认提交之前对数据进行预验证,添加新用户
     addUser() {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return;
@@ -197,8 +237,17 @@ export default {
         this.$message.success("添加用户成功");
         // 添加用户成功，关闭弹框addDialogVisible = false"
         this.addDialogVisible = false;
-        this.getUserList()
+        this.getUserList();
       });
+    },
+    // 展示编辑用户的对话框
+    async showEditDialog(id) {
+      const { data: res } = await this.$http.get("users/" + id);
+      if (res.meta.status !== 200) {
+        return this.$message.error("编辑用户失败");
+      }
+      this.editData = res.data;
+      this.editDialogVisible = true;
     }
   }
 };
