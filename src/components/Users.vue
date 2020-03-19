@@ -84,7 +84,12 @@
       </span>
     </el-dialog>
     <!-- 修改用户对话框模块组件 -->
-    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="50%">
+    <el-dialog
+      title="添加用户"
+      :visible.sync="editDialogVisible"
+      width="50%"
+      @closed="editDialogClosed"
+    >
       <!-- 修改弹框中的列表 -->
       <el-form :model="editData" :rules="editDataRules" ref="editDataRef" label-width="70px">
         <el-form-item label="用户名" prop="username">
@@ -100,7 +105,7 @@
       <!-- 弹框下面确认取消栏 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="editUserInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -230,6 +235,7 @@ export default {
     addUser() {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return;
+        // 发起添加数据信息的请求
         const { data: res } = await this.$http.post("users", this.addForm);
         if ((res.meta.status = !200)) {
           this.$message.error("添加用户失败");
@@ -248,6 +254,31 @@ export default {
       }
       this.editData = res.data;
       this.editDialogVisible = true;
+    },
+    // 监听修改用户对话框的关闭事件
+    editDialogClosed() {
+      this.$refs.editDataRef.resetFields();
+    },
+    // 修改用户信息，进行预验证并提交数据
+    editUserInfo() {
+      this.$refs.editDataRef.validate(async valid => {
+        if (!valid) return;
+        // 发起修改用户信息的请求
+        const { data: res } = await this.$http.put(
+          "users/" + this.editData.id,
+          {
+            email: this.editData.email,
+            mobile: this.editData.mobile
+          }
+        );
+        if (res.meta.status !== 200) {
+          this.$message.error("更新用户数据失败");
+        }
+        // 跟新数据成功，关闭对话框、刷新数据、提示修改用户成功
+        this.editDialogVisible = false;
+        this.getUserList();
+        this.$message.success("更新用户数据成功");
+      });
     }
   }
 };
