@@ -56,6 +56,7 @@ export default {
     };
   },
   methods: {
+    // 重置登录框
     resetloginForm() {
       // console.log(this)获取组件实例
       this.$refs.loginFormRef.resetFields();

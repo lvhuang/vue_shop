@@ -63,6 +63,10 @@ export default {
   created() {
     this.getMenuList();
   },
+  mounted(){
+    console.log("当前激活的路由信息对象-----",this.$route);
+    console.log("router 实例-----",this.$router);
+  },
   methods: {
     logout() {
       window.sessionStorage.clear();
