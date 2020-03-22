@@ -6,25 +6,32 @@ Vue.use(Vuex);
 
 // 创建vuex实例
 const store = new Vuex.Store({
-    state: { count: 1 },
+    state: {
+        count: 1,
+        danjia: 0,
+        shuliang: 0,
+    },
     getters: {
         getStateCount(state) {
             return state.count + 1
+        },
+        zongjia(state) {
+            return state.danjia * state.shuliang
         }
     },
-    mutations:{
-        addFun(state){
+    mutations: {
+        addFun(state) {
             state.count++
         },
-        reduceFun(state){
+        reduceFun(state) {
             state.count--
-        }
+        },
     },
-    actions:{
-        addFun1(context){
+    actions: {
+        addFun1(context) {
             context.commit("addFun")
         },
-        reduceFun1(context){
+        reduceFun1(context) {
             context.commit("reduceFun")
         }
     }
