@@ -74,7 +74,7 @@ export default {
         // 1.将登录成功的token值保存在sessionstorage中
         //  只有登录成功才能访问其他页面，所以token先当与于令牌
         // token只有在页面打开时需要，所以应存储在sessionstorage中，当页面关闭时sessionstorage中的值随之消失
-        window.sessionStorage.setItem("token", res.data.token);
+        window.localStorage.setItem("token", res.data.token);
         // 通过编程式导航实现路由跳转，跳转路径到/home
         this.$router.push("/home");
       });

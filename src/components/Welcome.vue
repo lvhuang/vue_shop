@@ -1,9 +1,22 @@
 <template>
-  <div>Welcome</div>
+  <div>
+    <div>我是state初始值{{this.$store.state.count}}</div>
+    <div>我是从getters中的计算属性获取的值{{this.$store.getters.getStateCount}}</div>
+    <button @click="zengjia">+++++++</button>
+    <button @click="jianshao">-------</button>
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    zengjia() {
+      this.$store.dispatch("addFun1");
+    },
+    jianshao() {
+      this.$store.dispatch("reduceFun1");
+    }
+  }
+};
 </script>
 
-<style lang="stylus" scoped></style>

@@ -1,5 +1,7 @@
 <template>
   <div>
+       <div>我是state初始值{{this.$store.state.count}}</div>
+    <div>我是从getters中的计算属性获取的值{{this.$store.getters.getStateCount}}</div>
     <!-- 用户列表页面首航面包屑组件 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
