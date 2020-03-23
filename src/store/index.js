@@ -4,8 +4,9 @@ import Vuex from 'vuex'
 // 使用vuex
 Vue.use(Vuex);
 
-// 创建vuex实例
+// 创建vuex实例，将数据存储在store中
 const store = new Vuex.Store({
+    // 共享数据存储在state中
     state: {
         count: 1,
         danjia: 0,

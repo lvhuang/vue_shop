@@ -1,6 +1,6 @@
 <template>
   <div>
-       <div>我是state初始值{{this.$store.state.count}}</div>
+    <div>我是state初始值{{this.$store.state.count}}</div>
     <div>我是从getters中的计算属性获取的值{{this.$store.getters.getStateCount}}</div>
     <!-- 用户列表页面首航面包屑组件 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -313,7 +313,7 @@ export default {
         return this.$message.error("删除用户失败");
       }
       this.$message.success("删除用户成功");
-      this.getUserList()
+      this.getUserList();
     }
   }
 };
