@@ -71,6 +71,11 @@ export default {
         console.log(res);
         if (res.meta.status !== 200) return this.$message.error("登录失败");
         this.$message.success("登录成功");
+        // console.log(res.data.username);
+        this.username = res.data.username;
+        localStorage.setItem("username", this.username)
+        this.$store.dispatch('userName1', this.username);
+
         // 1.将登录成功的token值保存在sessionstorage中
         //  只有登录成功才能访问其他页面，所以token先当与于令牌
         // token只有在页面打开时需要，所以应存储在sessionstorage中，当页面关闭时sessionstorage中的值随之消失

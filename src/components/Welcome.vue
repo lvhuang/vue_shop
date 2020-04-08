@@ -4,9 +4,9 @@
     <div>我是从getters中的计算属性获取的值{{this.$store.getters.getStateCount}}</div>
     <button @click="zengjia">+++++++</button>
     <button @click="jianshao">-------</button>
-    <input type="number" v-model="$store.state.danjia">单价
-    <input type="number" v-model="$store.state.shuliang">数量
-    <button >总价{{this.$store.getters.zongjia}}</button>
+    <input type="number" v-model="$store.state.danjia" />单价
+    <input type="number" v-model="$store.state.shuliang" />数量
+    <button>总价{{this.$store.getters.zongjia}}</button>
   </div>
 </template>
 

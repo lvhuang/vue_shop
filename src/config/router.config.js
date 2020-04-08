@@ -3,6 +3,7 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Users from '../components/Users.vue'
 import Rights from '../components/power/Rights.vue'
+
 const routes = [
     { path: '/', redirect: '/login' }, //route
     { path: '/login', component: Login },

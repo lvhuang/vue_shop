@@ -5,7 +5,17 @@
         <img src="../assets/heima.png" alt />
         <span>电商后台管理系统</span>
       </div>
-      <el-button type="info" @click="logout">退出</el-button>
+      <!-- <el-button type="info" @click="logout">{{this.$store.state.admin}}</el-button> -->
+      <el-dropdown @command="logout">
+        <span class="el-dropdown-link">
+          <el-button type="info">{{this.$store.state.username}}</el-button>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item>个人中心</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </el-header>
     <el-container>
       <!-- 侧边栏布局内容 -->
@@ -32,7 +42,11 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="'/'+subitem.path+''" v-for="subitem in item.children" :key="subitem.id">
+            <el-menu-item
+              :index="'/'+subitem.path+''"
+              v-for="subitem in item.children"
+              :key="subitem.id"
+            >
               <i class="el-icon-menu"></i>
               <span slot="title">{{subitem.authName}}</span>
             </el-menu-item>
@@ -63,13 +77,13 @@ export default {
   created() {
     this.getMenuList();
   },
-  mounted(){
-    console.log("当前激活的路由信息对象-----",this.$route);
-    console.log("router 实例-----",this.$router);
+  mounted() {
+    console.log("当前激活的路由信息对象-----", this.$route);
+    console.log("router 实例-----", this.$router);
   },
   methods: {
     logout() {
-      window.sessionStorage.clear();
+      window.localStorage.clear();
       this.$router.push("/login");
     },
     // 获取所有的菜单
